@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'">
+  <title>Souffleur</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="titlebar">
+    <span class="brand">🎭 Souffleur</span>
+    <span id="timer" class="timer" hidden>00:00</span>
+    <span class="spacer"></span>
+    <span class="dots">
+      <span class="dot" id="dot-them" title="Deepgram — eux"></span>
+      <span class="dot" id="dot-me" title="Deepgram — toi"></span>
+      <span class="dot" id="dot-llm" title="Claude"></span>
+    </span>
+    <button class="tb" id="btn-hide" title="Masquer (⌘⇧C)">—</button>
+    <button class="tb" id="btn-quit" title="Quitter">✕</button>
+  </header>
+
+  <div id="banner" class="banner" hidden></div>
+
+  <!-- START -->
+  <section id="screen-start" class="screen">
+    <div id="keys-warning" class="card warn" hidden></div>
+
+    <label class="field">
+      <span>Eux (audio du meeting)</span>
+      <select id="sel-them"></select>
+    </label>
+    <label class="field">
+      <span>Toi (micro)</span>
+      <select id="sel-me"></select>
+    </label>
+
+    <div class="field">
+      <span>Contextes globaux <button class="link" id="btn-open-contexts">ouvrir le dossier</button></span>
+      <div id="contexts" class="checks"></div>
+    </div>
+
+    <label class="field">
+      <span>Contexte de ce call</span>
+      <textarea id="call-context" rows="5" placeholder="Prospect, boîte, objectif du call, ce que tu sais déjà, ce que tu veux obtenir…"></textarea>
+    </label>
+
+    <label class="field">
+      <span>Mémo — ton texte à dire (visible pendant le call, jamais dans le partage d'écran)</span>
+      <textarea id="memo-start" rows="4" placeholder="Colle ici ton script, tes phrases clés, ton plan de présentation…"></textarea>
+    </label>
+
+    <label class="field">
+      <span>Modèle coach</span>
+      <select id="sel-model"></select>
+    </label>
+    <label class="check-inline"><input type="checkbox" id="chk-preview"> Aperçu pendant qu'il parle encore (zone séparée, atténuée)</label>
+
+    <button id="btn-start" class="primary">Démarrer</button>
+
+    <details class="help">
+      <summary>Setup audio (une fois)</summary>
+      <ol>
+        <li>Ouvre <b>Configuration audio et MIDI</b> → <b>+</b> → <b>Créer un périphérique à sorties multiples</b>.</li>
+        <li>Coche <b>tes écouteurs</b> + <b>BlackHole 2ch</b>. Renomme le en « Meeting ».</li>
+        <li>Pendant un call : sortie système = <b>Meeting</b>. Tu entends, BlackHole reçoit une copie.</li>
+        <li>Ici : Eux = BlackHole 2ch, Toi = ton micro.</li>
+      </ol>
+      <p>Raccourcis : <kbd>⌘⇧C</kbd> masquer · <kbd>⌘⇧R</kbd> relance · <kbd>⌘⇧P</kbd> pause · <kbd>⌘⇧M</kbd> mémo.</p>
+    </details>
+  </section>
+
+  <!-- LIVE -->
+  <section id="screen-live" class="screen" hidden>
+    <div id="memo" class="memo collapsed">
+      <div class="memo-head">
+        <button class="memo-toggle" id="memo-toggle" title="Replier / déplier (⌘⇧M)">📝 Mémo</button>
+        <span class="spacer"></span>
+        <button class="tb" id="memo-full" title="Grand / normal">⤢</button>
+      </div>
+      <textarea id="memo-text" class="memo-body" spellcheck="false" placeholder="Ton texte à dire…"></textarea>
+    </div>
+    <div class="levels">
+      <div class="lvl"><span>eux</span><div class="bar"><i id="lvl-them"></i></div></div>
+      <div class="lvl"><span>toi</span><div class="bar"><i id="lvl-me"></i></div></div>
+    </div>
+    <div id="transcript" class="transcript"></div>
+    <div class="coach">
+      <div class="coach-head">
+        <span id="coach-title">Réponse</span>
+        <span id="coach-meta" class="meta"></span>
+      </div>
+      <div id="coach-body" class="coach-body"><em class="muted">En attente du prospect…</em></div>
+      <div id="preview-wrap" hidden>
+        <div class="coach-head sub"><span>Aperçu · il parle encore</span></div>
+        <div id="coach-preview" class="coach-preview"></div>
+      </div>
+    </div>
+    <div class="actions">
+      <button id="btn-pause">Pause</button>
+      <button id="btn-coach" class="accent" title="Demander une relance vers les objectifs du call">Relance ⌘⇧R</button>
+      <button id="btn-stop" class="danger">Stop</button>
+    </div>
+  </section>
+
+  <!-- END -->
+  <section id="screen-end" class="screen" hidden>
+    <div class="card">
+      <h3>Session sauvegardée</h3>
+      <p id="end-file" class="mono"></p>
+      <div class="row">
+        <button id="btn-open-session">Ouvrir</button>
+        <button id="btn-new" class="primary">Nouvelle session</button>
+      </div>
+    </div>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>

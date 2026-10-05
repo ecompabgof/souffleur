@@ -1,0 +1,26 @@
+{
+  "name": "souffleur",
+  "version": "0.1.0",
+  "description": "Real-time meeting copilot: live transcription, EN→FR translation, reply suggestions. Invisible to screen sharing.",
+  "main": "src/main/index.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "test": "vitest run",
+    "smoke": "bash scripts/smoke.sh",
+    "e2e": "node scripts/e2e.js",
+    "audio:setup": "swift scripts/audio-setup.swift create",
+    "audio:restore": "swift scripts/audio-setup.swift restore",
+    "audio:status": "swift scripts/audio-setup.swift status"
+  },
+  "devDependencies": {
+    "electron": "^44.3.0",
+    "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.125.0",
+    "dotenv": "^17.2.1",
+    "ws": "^8.21.3"
+  },
+  "license": "MIT"
+}
